@@ -3,19 +3,20 @@
 
 #include <QObject>
 #include <QMutex>
+#include "Protocol/AbstractPort.hpp"
 
 class QIODevice;
 
-class AbstractDevice : public QObject
+class AbstractDevice : public QObject, public AbstractPort
 {
     Q_OBJECT
 public:
     explicit AbstractDevice(QObject *parent = nullptr);
 
-    int writeData(const uint8_t *data, int size);
+    int writeData(const uint8_t *data, int size) override;
     int readData(uint8_t* receiveMessage,
                  int maxNumberOfBytesToReceive,
-                 int* numberOfReceivedBytes);
+                 int* numberOfReceivedBytes) override;
 
     virtual QString getName() const = 0;
 

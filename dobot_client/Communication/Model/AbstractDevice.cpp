@@ -6,9 +6,9 @@
 #include "Errors.hpp"
 
 AbstractDevice::AbstractDevice(QObject *parent)
-    : QObject{parent}
+    : QObject{parent}, AbstractPort()
 {
-
+    connect(this, &AbstractDevice::_writeSignal, this, &AbstractDevice::writeSlot, Qt::QueuedConnection);
 }
 
 int AbstractDevice::writeData(const uint8_t* data, int size)
