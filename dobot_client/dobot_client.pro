@@ -12,6 +12,9 @@ CONFIG += c++17
 
 SOURCES += \
     Communication/Model/AbstractDevice.cpp \
+    Communication/Model/CommunicationService.cpp \
+    Communication/Model/SerialConfigStore.cpp \
+    Communication/Model/SerialPortService.cpp \
     Communication/Widget/CommunicationView.cpp \
     Communication/Widget/SerialView.cpp \
     main.cpp \
@@ -19,8 +22,13 @@ SOURCES += \
 
 HEADERS += \
     Communication/Model/AbstractDevice.hpp \
+    Communication/Model/CommunicationService.hpp \
+    Communication/Model/SerialConfigStore.hpp \
+    Communication/Model/SerialPortService.hpp \
+    Communication/Model/SerialPortSettigs.h \
     Communication/Widget/CommunicationView.hpp \
     Communication/Widget/SerialView.hpp \
+    Errors.hpp \
     mainwindow.h
 
 # Default rules for deployment.

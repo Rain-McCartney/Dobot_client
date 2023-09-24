@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class CommunicationView;
+class CommunicationService;
 
 class MainWindow : public QMainWindow
 {
@@ -18,5 +19,6 @@ private:
 
     QWidget* m_centralWidget = nullptr;
 
-    CommunicationView* m_communicationView = nullptr;
+    CommunicationService* m_communicationService = nullptr;
+    CommunicationView*    m_communicationView    = nullptr;
 };
