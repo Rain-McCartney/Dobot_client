@@ -12,11 +12,15 @@ CONFIG += c++17
 
 SOURCES += \
     Communication/Model/AbstractDevice.cpp \
+    Communication/Widget/CommunicationView.cpp \
+    Communication/Widget/SerialView.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     Communication/Model/AbstractDevice.hpp \
+    Communication/Widget/CommunicationView.hpp \
+    Communication/Widget/SerialView.hpp \
     mainwindow.h
 
 # Default rules for deployment.

@@ -1,7 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+
+#pragma once
 
 #include <QMainWindow>
+
+class CommunicationView;
 
 class MainWindow : public QMainWindow
 {
@@ -10,5 +12,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+
+private:
+
+    QWidget* m_centralWidget = nullptr;
+
+    CommunicationView* m_communicationView = nullptr;
 };
-#endif // MAINWINDOW_H
