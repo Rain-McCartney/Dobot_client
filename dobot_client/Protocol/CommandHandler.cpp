@@ -1,3 +1,4 @@
+#include "Errors.hpp"
 #include "CommandHandler.hpp"
 #include "Protocol/Protocol.hpp"
 #include "Protocol/CommandArguments.hpp"
@@ -17,4 +18,6 @@ retStatusCode CommandHandler::sendCommandWithReturnResponse(CommandArguments *ar
                                                             bool checkSize)
 {
     m_protocol->sendMessage(args->getPayload(), args->getPayloadSize());
+
+    return STATUS_OK;
 }

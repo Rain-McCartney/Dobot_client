@@ -85,7 +85,7 @@ void CommunicationService::finishedWatcherTimer()
 
 void CommunicationService::startPingPolling()
 {
-    m_timerPing->start(5000);
+    m_timerPing->start(2000);
 }
 
 void CommunicationService::stopPingPolling()
