@@ -1,6 +1,7 @@
 #include "Errors.hpp"
 #include "CommandHandler.hpp"
 #include "Protocol/Protocol.hpp"
+#include "Protocol/Message.hpp"
 #include "Protocol/CommandArguments.hpp"
 
 CommandHandler::CommandHandler(Protocol *protocol,
@@ -17,7 +18,22 @@ retStatusCode CommandHandler::sendCommandWithReturnResponse(CommandArguments *ar
                                                             size_t *returnedSize,
                                                             bool checkSize)
 {
-    m_protocol->sendMessage(args->getPayload(), args->getPayloadSize());
+    MessageSmartPtr sendMessage = m_protocol->createMessage(args->getMessageCode(),
+                                                            args->getPayload(),
+                                                            args->getPayloadSize());
+
+    if (!sendMessage.get())
+    {
+//        qCritical(logCritical()) << "CommandHandler::sendCommand: "
+//                                 << QString::fromStdString(commandName)
+//                                 << "could not allocate send message.";
+
+        return STATUS_ERROR;
+    }
+
+    MessageSmartPtr receiveMessage;
+
+    m_protocol->SendAndReceiveMessage(sendMessage, receiveMessage, args->getTimeout());
 
     return STATUS_OK;
 }

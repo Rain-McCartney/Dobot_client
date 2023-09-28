@@ -19,8 +19,11 @@ SOURCES += \
     Communication/Widget/CommunicationView.cpp \
     Communication/Widget/SerialView.cpp \
     Protocol/AbstractPort.cpp \
+    Protocol/CalculationCRC.cpp \
     Protocol/CommandArguments.cpp \
     Protocol/CommandHandler.cpp \
+    Protocol/Message.cpp \
+    Protocol/MessagePayload.cpp \
     Protocol/Protocol.cpp \
     Protocol/ProtocolHelper.cpp \
     main.cpp \
@@ -37,8 +40,11 @@ HEADERS += \
     Communication/Widget/SerialView.hpp \
     Errors.hpp \
     Protocol/AbstractPort.hpp \
+    Protocol/CalculationCRC.h \
     Protocol/CommandArguments.hpp \
     Protocol/CommandHandler.hpp \
+    Protocol/Message.hpp \
+    Protocol/MessagePayload.hpp \
     Protocol/Protocol.hpp \
     Protocol/ProtocolHelper.h \
     mainwindow.h

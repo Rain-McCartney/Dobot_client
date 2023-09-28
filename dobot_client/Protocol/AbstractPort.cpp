@@ -4,3 +4,8 @@ AbstractPort::AbstractPort()
 {
 
 }
+
+AbstractPort::~AbstractPort()
+{
+
+}
