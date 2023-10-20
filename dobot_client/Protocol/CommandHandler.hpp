@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include "Errors.hpp"
+#include "Protocol/Protocol.hpp"
 
-class Protocol;
 class CommandArguments;
 
 class CommandHandler : public QObject
@@ -18,7 +18,6 @@ public:
     retStatusCode sendCommandWithReturnResponse(CommandArguments *args,
                                                 uint8_t *bytes,
                                                 size_t expectedSize,
-                                                size_t *returnedSize = nullptr,
                                                 bool checkSize = true);
 
 signals:
@@ -28,5 +27,11 @@ private:
 
     Protocol* m_protocol = nullptr;
 
+    /**
+     * @brief statusCheckPayload.
+     * @param receiveMessage[in] Receive Message.
+     * @returns status value from mcu in payload.
+     */
+    int32_t statusCheckPayload(const MessageSmartPtr& receiveMessage);
 };
 

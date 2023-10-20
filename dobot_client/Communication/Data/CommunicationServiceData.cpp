@@ -1,9 +1,13 @@
 #include <QtConcurrent/QtConcurrent>
+
 #include "Errors.hpp"
+#include "DataHelper.h"
 #include "Protocol/ProtocolHelper.h"
+#include "CommunicationException.hpp"
 #include "Protocol/CommandHandler.hpp"
 #include "CommunicationServiceData.hpp"
 #include "Protocol/CommandArguments.hpp"
+#include "LoggingCategories/LoggingCategories.hpp"
 
 CommunicationServiceData::CommunicationServiceData(CommandHandler *comHandler,
                                                    QObject *parent)
@@ -13,46 +17,65 @@ CommunicationServiceData::CommunicationServiceData(CommandHandler *comHandler,
 
 }
 
-QFuture<quint32> CommunicationServiceData::sendCommandPing(quint32 sequenceNumber)
+QFuture<bool> CommunicationServiceData::sendCommandPing(quint32 sequenceNumber)
 {
     auto worker = [this](quint32 sequenceNumber)
     {
-        const QString& commandName = "Ping";
+        const QString& commandName = "Ping Command";
 
-        const uint8_t requestPayloadSize = 4;
-        uint8_t requestPayload[requestPayloadSize] = {0};
+        std::vector<uint8_t> sendMessage;
+        const uint8_t sendMessageSize = 8;
+        sendMessage.resize(sendMessageSize);
 
-        requestPayload[0] = (sequenceNumber >> 0)  &0xFF;
-        requestPayload[1] = (sequenceNumber >> 8)  &0xFF;
-        requestPayload[2] = (sequenceNumber >> 16) &0xFF;
-        requestPayload[3] = (sequenceNumber >> 24) &0xFF;
+        const uint32_t type = 0;
+        const uint8_t offsetType = 0;
+        createPayloadFromUint32(type, offsetType, sendMessage.data());
+
+        const uint8_t offsetSequenceNumber = 4;
+        createPayloadFromUint32(sequenceNumber, offsetSequenceNumber, sendMessage.data());
 
         CommandArguments arguments(MessageCodes::MSG_CODE_PCM_SET_MCU_PING,
                                    commandName.toStdString(),
-                                   requestPayload,
-                                   requestPayloadSize);
+                                   sendMessage.data(),
+                                   sendMessage.size());
 
-        const uint8_t responsePayloadSize = 4;
+        const uint8_t responsePayloadSize = 12;
+        //const uint8_t responsePayloadSize = 8;
         uint8_t responsePayload[responsePayloadSize] = {0};
 
         retStatusCode retStatus = m_commandHandler->sendCommandWithReturnResponse(&arguments,
                                                                                   responsePayload,
                                                                                   responsePayloadSize);
-
-        quint32 value = 0;
+        bool isCorrectConnection = false;
 
         if (retStatus == STATUS_OK)
         {
-            value |= (responsePayload[0] << 0) | (responsePayload[1] << 8) |
-                    (responsePayload[2] << 16) | (responsePayload[3] << 24);
+            const uint8_t offsetType = 4;
+            const uint32_t type = createUint32FromPayload(responsePayload, offsetType);
+            //const uint32_t type = 1;
 
+            const uint8_t offsetSequenceNumber = 8;
+            const uint32_t seqNumber = createUint32FromPayload(responsePayload, offsetSequenceNumber);
+            //const uint32_t seqNumber = sequenceNumber;
+
+            if (type == s_typeResponse && seqNumber == sequenceNumber)
+            {
+                isCorrectConnection = true;
+            }
+            else
+            {
+                isCorrectConnection = false;
+            }
         }
+        else
+        {
+            QString msg = commandName + " failed, status "
+                    + QString::number(static_cast<uint32_t>(retStatus));
 
-
-
-        return value;
+            qCritical(logCritical()) << commandName << " failed";
+            throw CommunicationException(msg);
+        }
+        return isCorrectConnection;
     };
-
-
     return QtConcurrent::run(worker, sequenceNumber);
 }

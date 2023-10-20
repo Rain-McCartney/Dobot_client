@@ -1,10 +1,13 @@
 
 #pragma once
 
+#include <QVBoxLayout>
 #include <QMainWindow>
 
 class Protocol;
+class LogWindow;
 class CommandHandler;
+class StatusBarWidget;
 class CommunicationView;
 class CommunicationService;
 class CommunicationServiceData;
@@ -17,6 +20,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    static void logHandler(QtMsgType type, const QMessageLogContext& context, const QString &msg);
+
 
 private:
 
@@ -28,4 +33,9 @@ private:
     CommunicationServiceData* m_communicationServiceData = nullptr;
     CommunicationService* m_communicationService = nullptr;
     CommunicationView*    m_communicationView    = nullptr;
+    StatusBarWidget* m_statusBarWidget = nullptr;
+
+    static LogWindow* m_logWindow;
+
+    QVBoxLayout *createWidgetLayout();
 };

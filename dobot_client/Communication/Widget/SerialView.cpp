@@ -47,14 +47,14 @@ QGroupBox *SerialView::createSelectPortBox()
     m_selectPortComboBox = new QComboBox(box);
     pTopLayout->addWidget(m_selectPortComboBox);
 
-    m_serialNumberLabel = new QLabel("Serial Number:",      box);
-    pTopLayout->addWidget(m_serialNumberLabel);
-
     m_descriptionLabel  = new QLabel("Description:",        box);
     pTopLayout->addWidget(m_descriptionLabel);
 
     m_manufacturerLabel = new QLabel("Manufacturer:",       box);
     pTopLayout->addWidget(m_manufacturerLabel);
+
+    m_serialNumberLabel = new QLabel("Serial Number:",      box);
+    pTopLayout->addWidget(m_serialNumberLabel);
 
     m_locationLabel     = new QLabel("Location:",           box);
     pTopLayout->addWidget(m_locationLabel);

@@ -13,7 +13,7 @@ public:
     explicit CommunicationServiceData(CommandHandler* comHandler,
                                       QObject *parent = nullptr);
 
-    QFuture<quint32> sendCommandPing(quint32 sequenceNumber);
+    QFuture<bool> sendCommandPing(quint32 sequenceNumber);
 
 signals:
 
@@ -21,6 +21,8 @@ signals:
 private:
 
     CommandHandler* m_commandHandler = nullptr;
+
+    static constexpr uint32_t s_typeResponse = 1;
 
 };
 

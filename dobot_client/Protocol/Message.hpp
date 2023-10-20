@@ -17,6 +17,7 @@ public:
                      std::vector<uint8_t> payload,
                      QObject *parent = nullptr);
 
+
     uint8_t getPacketLenght() const;
     uint8_t getComId() const;
     uint16_t getSequenceNumber() const;
@@ -24,7 +25,22 @@ public:
     uint32_t getCrc32() const;
     uint8_t* getData();
     uint8_t getDataSize() const;
+    uint8_t* getPayloadData();
+    uint8_t getPayloadSize() const;
 
+    /*****************************************************************************
+     * \brief Gets int32_t value from the received message payload
+     * \return int32_t value
+     ******************************************************************************/
+    int32_t intValueFromPayload() const;
+
+    /*****************************************************************************
+     * \brief MessageFrame constructor
+     * \param[in] messageFrame
+     * \param[in] frameSize
+     ******************************************************************************/
+    explicit Message(const uint8_t* message,
+                     size_t receivedMessageSize);
 
 private:
 

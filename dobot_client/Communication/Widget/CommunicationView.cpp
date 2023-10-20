@@ -14,6 +14,7 @@ CommunicationView::CommunicationView(CommunicationService *comService,
     pTopLayout->addWidget(m_serialPortView);
 
     pTopLayout->addLayout(createButtonsLayout());
+    pTopLayout->setContentsMargins(0, 0, 0, 0);
 
     connect(m_openBtn,  &QPushButton::clicked, m_communicationService, &CommunicationService::openDevice);
     connect(m_closeBtn, &QPushButton::clicked, m_communicationService, &CommunicationService::closeDevice);

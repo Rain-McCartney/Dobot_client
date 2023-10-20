@@ -9,6 +9,15 @@ class Protocol;
 class SerialPortService;
 class CommunicationServiceData;
 
+struct InfoDevice
+{
+    QString typePort;
+    QString namePort;
+    bool statusEnabled;
+};
+
+Q_DECLARE_METATYPE(InfoDevice)
+
 class CommunicationService : public QObject
 {
     Q_OBJECT
@@ -29,6 +38,8 @@ signals:
     void openedDevice();
     void closedDevice();
 
+    void isConnectedDeviceSignal(const InfoDevice& infoDevice);
+
 private slots:
 
     void openedPort();
@@ -46,11 +57,14 @@ private:
     Protocol* m_protocol = nullptr;
 
     SerialPortService* m_serialPortService = nullptr;
-
-    QTimer* m_timerPing = nullptr;
-    QFutureWatcher<uint32_t>* m_watcherTimer = nullptr;
-
     quint32 m_sequenceNumber;
 
-};
+    bool m_isConnectedDevice;
+    uint8_t m_countDisconnected;
 
+    QTimer* m_timerPing = nullptr;
+    QFutureWatcher<bool>* m_watcherTimer = nullptr;
+
+    InfoDevice m_infoDevice;
+
+};

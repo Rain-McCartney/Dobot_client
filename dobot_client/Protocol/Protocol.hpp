@@ -14,6 +14,7 @@
 #include "Protocol/Message.hpp"
 #include "Protocol/ProtocolHelper.h"
 #include "Protocol/MessagePayload.hpp"
+#include "Protocol/CircularBuffer.hpp"
 
 class Protocol : public QObject
 {
@@ -48,6 +49,8 @@ private:
     Protocol& operator=(const Protocol&) = delete;
 
     AbstractPort* m_port = nullptr;
+
+    CircularBufferUniquePtr m_receiveBuffer; /**<Circular buffer .*/
 
     uint8_t m_comID; /**< Communication ID (message sequence number).Increments for every message. */
 
@@ -88,10 +91,6 @@ private:
 
     void stopAndWaitReceiveThreadEnd();
 
-    MessageSmartPtr createMessageFromPayloadHelper(const MessagePayloadSmartPtr &payload,
-                                                   uint8_t payloadSize,
-                                                   uint16_t code);
-
     uint8_t getAndUpdateComID();
 
     uint16_t getAndUpdateSequentialNumber();
@@ -105,5 +104,18 @@ private:
                                                 uint32_t timeout);
 
     retStatusCode waitForSyncResponse(MessageSmartPtr& receiveMessage, uint32_t timeout_in_milli);
+
+    retStatusCode getReceivedMessage(uint8_t **data, int &dataSize);
+
+    void resetReceiveBuffer();
+
+    retStatusCode receiveMessage(MessageSmartPtr& message,
+                                 uint8_t* receivedMessage,
+                                 uint32_t receivedMessageSize);
+
+    void notifySyncResponse(retStatusCode rxStatus,
+                            const MessageSmartPtr& receiveMsg);
+
+    void notifySyncResponseStatus(retStatusCode rxStatus);
 
 };

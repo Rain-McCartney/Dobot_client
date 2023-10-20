@@ -2,8 +2,9 @@
 #include <QDebug>
 #include <QIODevice>
 
-#include "AbstractDevice.hpp"
 #include "Errors.hpp"
+#include "AbstractDevice.hpp"
+#include "LoggingCategories/LoggingCategories.hpp"
 
 AbstractDevice::AbstractDevice(QObject *parent)
     : QObject{parent}, AbstractPort()
@@ -29,7 +30,7 @@ int AbstractDevice::readData(uint8_t *receiveMessage, int maxNumberOfBytesToRece
     if (*numberOfReceivedBytes > 0)
     {
         memcpy(receiveMessage,  m_readBuffer.data(),  *numberOfReceivedBytes);
-        //qDebug(logDebug()) << "Read: " << QByteArray(m_readBuffer, *numberOfReceivedBytes).toHex(' ');
+        qDebug(logDebug()) << "Read: " << QByteArray(m_readBuffer, *numberOfReceivedBytes).toHex(' ');
         m_readBuffer.remove(0, *numberOfReceivedBytes);
     }
 
@@ -43,7 +44,7 @@ void AbstractDevice::writeSlot(QByteArray data)
     if(m_device->isOpen())
     {
         m_device->write(data, data.size());
-        qDebug() << "Send: " << data.toHex(' ');
+        qDebug(logDebug()) << "Send: " << data.toHex(' ');
     }
 }
 
@@ -55,7 +56,7 @@ void AbstractDevice::onProtReadyRead()
 
     if (m_readBuffer.size() > s_readBufferSize && data.size() > s_readBufferSize)
     {
-        //qCritical(logCritical()) << "Too many bytes in the TCP socket buffer.";
+        qCritical(logCritical()) << "Too many bytes in the TCP socket buffer.";
         m_readBuffer = QByteArray(data);
 
     }
